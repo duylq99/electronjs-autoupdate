@@ -47,38 +47,43 @@ export function TopNav({ activeView, onNavigate }: TopNavProps): JSX.Element {
         </button>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-xs">
-          <a
-            href="#features"
-            onClick={() => onNavigate('home')}
-            className="font-sans text-body-sm font-[320] text-ink hover:opacity-60 transition-opacity px-sm py-xs"
-          >
-            Features
-          </a>
-          <a
-            href="#update"
-            onClick={() => onNavigate('home')}
-            className="font-sans text-body-sm font-[320] text-ink hover:opacity-60 transition-opacity px-sm py-xs"
-          >
-            Auto-Update
-          </a>
-          <button
-            onClick={() => onNavigate('cms')}
-            className={cn(
-              'font-sans text-body-sm px-sm py-xs transition-all rounded-sm',
-              activeView === 'cms'
-                ? 'text-ink font-[480] bg-surface-soft'
-                : 'text-ink font-[320] hover:opacity-60'
-            )}
-          >
-            Release CMS
-          </button>
+        <nav className="hidden md:flex items-center gap-xxs">
+          {[
+            { label: 'Home', view: 'home' as const, href: undefined },
+            { label: 'Auto-Update', view: 'home' as const, href: '#update' },
+            { label: 'Release CMS', view: 'cms' as const, href: undefined },
+          ].map(({ label, view, href }) => {
+            const isActive = activeView === view && (label !== 'Auto-Update')
+            return (
+              <a
+                key={label}
+                href={href ?? '#'}
+                onClick={(e) => { if (!href) e.preventDefault(); onNavigate(view) }}
+                className={cn(
+                  'relative font-sans text-body-sm px-sm py-xs rounded-sm transition-all select-none',
+                  isActive
+                    ? 'text-ink font-[500]'
+                    : 'text-ink font-[320] opacity-50 hover:opacity-80'
+                )}
+              >
+                {label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-sm right-sm h-[2px] bg-ink rounded-full" />
+                )}
+              </a>
+            )
+          })}
         </nav>
 
         {/* CTAs */}
         <div className="hidden md:flex items-center gap-sm">
           <button
-            className="btn-secondary flex items-center gap-xs"
+            className={cn(
+              'flex items-center gap-xs font-sans text-body-sm font-[480] px-md border rounded-pill transition-all',
+              activeView === 'cms'
+                ? 'bg-ink text-canvas border-ink'
+                : 'bg-canvas text-ink border-hairline hover:border-ink/50'
+            )}
             style={{ fontSize: '14px', padding: '5px 16px 7px' }}
             onClick={() => onNavigate('cms')}
           >
@@ -87,7 +92,12 @@ export function TopNav({ activeView, onNavigate }: TopNavProps): JSX.Element {
           </button>
           <a
             href="#update"
-            className="btn-primary flex items-center gap-xs"
+            className={cn(
+              'flex items-center gap-xs font-sans text-body-sm font-[480] px-md border rounded-pill transition-all',
+              activeView === 'home'
+                ? 'bg-ink text-canvas border-ink hover:opacity-80'
+                : 'bg-canvas text-ink border-hairline hover:border-ink/50'
+            )}
             style={{ fontSize: '14px', padding: '6px 16px' }}
             onClick={() => onNavigate('home')}
           >

@@ -1,11 +1,49 @@
 import { useEffect } from 'react'
-import { Settings, Package, PlusCircle, X, ChevronRight, RefreshCw, Tag } from 'lucide-react'
+import { Settings, Package, PlusCircle, X, ChevronRight, RefreshCw, Tag, AlertTriangle, CheckCircle2, KeyRound, Globe, ShieldX } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCms } from '@/hooks/useCms'
 import { ProviderConfig } from './ProviderConfig'
 import { CreateReleaseForm } from './CreateReleaseForm'
 import { ReleaseDetail } from './ReleaseDetail'
 import type { Release } from '../../../../shared/cms-types'
+
+function parseApiError(raw: string): { title: string; detail: string; icon: typeof AlertTriangle } {
+  if (/401/.test(raw)) return { title: 'Invalid token', detail: 'The access token was rejected. Check that it is correct and not expired.', icon: KeyRound }
+  if (/403/.test(raw)) return { title: 'Permission denied', detail: 'The token does not have sufficient scope to access this repository.', icon: ShieldX }
+  if (/404/.test(raw)) return { title: 'Repository not found', detail: 'Check that the owner and repository name are correct, and that the token can access it.', icon: Globe }
+  if (/422/.test(raw)) return { title: 'Validation error', detail: raw.replace(/.*?:\s*/, ''), icon: AlertTriangle }
+  return { title: 'Request failed', detail: raw, icon: AlertTriangle }
+}
+
+function AlertBanner({ message, type, onDismiss }: { message: string; type: 'error' | 'success'; onDismiss: () => void }): JSX.Element {
+  if (type === 'success') {
+    return (
+      <div className="flex items-start gap-md rounded-md border border-block-mint bg-block-mint/40 px-lg py-md mb-xl">
+        <CheckCircle2 size={16} strokeWidth={2} className="text-semantic-success mt-[2px] flex-shrink-0" />
+        <p className="font-sans text-body-sm font-[400] text-ink flex-1">{message}</p>
+        <button onClick={onDismiss} className="flex-shrink-0 text-ink opacity-30 hover:opacity-70 transition-opacity">
+          <X size={14} strokeWidth={2} />
+        </button>
+      </div>
+    )
+  }
+
+  const { title, detail, icon: Icon } = parseApiError(message)
+  return (
+    <div className="rounded-md border border-block-coral/60 bg-block-coral/20 px-lg py-md mb-xl">
+      <div className="flex items-start justify-between gap-md mb-xs">
+        <div className="flex items-center gap-xs">
+          <Icon size={15} strokeWidth={2} className="text-accent-magenta flex-shrink-0" />
+          <span className="font-sans text-body-sm font-[500] text-ink">{title}</span>
+        </div>
+        <button onClick={onDismiss} className="flex-shrink-0 text-ink opacity-30 hover:opacity-70 transition-opacity">
+          <X size={14} strokeWidth={2} />
+        </button>
+      </div>
+      <p className="font-sans text-body-sm font-[320] text-ink opacity-70 pl-[23px]">{detail}</p>
+    </div>
+  )
+}
 
 function ReleaseRow({ release, onClick }: { release: Release; onClick: () => void }): JSX.Element {
   return (
@@ -48,7 +86,16 @@ export function CmsPanel(): JSX.Element {
   const isElectron = !!window.electronAPI
 
   useEffect(() => {
-    if (isElectron) cms.loadConfig()
+    if (!isElectron) return
+    const init = async () => {
+      const api = window.electronAPI!
+      const cfg = await api.cmsGetConfig()
+      cms.updateConfig(cfg)
+      if (cfg.token.trim() && cfg.owner.trim() && cfg.repo.trim()) {
+        cms.fetchReleases(cfg)
+      }
+    }
+    init()
   }, [isElectron])
 
   return (
@@ -86,17 +133,8 @@ export function CmsPanel(): JSX.Element {
       </div>
 
       {/* Alert messages */}
-      {(cms.error || cms.successMsg) && (
-        <div className={cn(
-          'rounded-md px-lg py-md mb-xl flex items-start justify-between gap-md',
-          cms.error ? 'bg-block-coral/30' : 'bg-block-mint/50'
-        )}>
-          <p className="font-sans text-body-sm font-[320] text-ink">{cms.error ?? cms.successMsg}</p>
-          <button onClick={cms.clearMessages} className="flex-shrink-0 text-ink opacity-40 hover:opacity-80">
-            <X size={14} strokeWidth={2} />
-          </button>
-        </div>
-      )}
+      {cms.error && <AlertBanner message={cms.error} type="error" onDismiss={cms.clearMessages} />}
+      {cms.successMsg && <AlertBanner message={cms.successMsg} type="success" onDismiss={cms.clearMessages} />}
 
       {!isElectron && (
         <p className="caption text-ink opacity-40 mb-xl">Running in browser — Electron IPC not available</p>

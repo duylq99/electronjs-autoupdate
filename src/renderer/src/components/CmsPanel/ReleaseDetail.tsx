@@ -1,7 +1,8 @@
-import { ArrowLeft, Upload, FileText, X, Download, Tag, Calendar, AlertCircle } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowLeft, Upload, FileText, X, Download, Tag, Calendar, AlertCircle, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatBytes } from '@/lib/utils'
-import type { Release } from '../../../../shared/cms-types'
+import type { Release, ReleaseAsset } from '../../../../shared/cms-types'
 
 interface Props {
   release: Release
@@ -11,7 +12,29 @@ interface Props {
   onBack: () => void
 }
 
+function DeleteConfirm({ asset, onConfirm, onCancel }: { asset: ReleaseAsset; onConfirm: () => void; onCancel: () => void }): JSX.Element {
+  return (
+    <div className="flex items-center gap-sm flex-shrink-0 bg-block-coral/20 border border-block-coral/40 rounded-md px-md py-xs">
+      <span className="font-sans text-body-sm font-[400] text-ink">Delete <span className="font-[500]">{asset.name}</span>?</span>
+      <button
+        onClick={onConfirm}
+        className="flex items-center gap-xxs font-sans text-body-sm font-[500] text-accent-magenta hover:opacity-70 transition-opacity"
+      >
+        <Trash2 size={13} strokeWidth={2} />
+        Delete
+      </button>
+      <button
+        onClick={onCancel}
+        className="font-sans text-body-sm font-[400] text-ink opacity-40 hover:opacity-80 transition-opacity"
+      >
+        Cancel
+      </button>
+    </div>
+  )
+}
+
 export function ReleaseDetail({ release, loading, onUpload, onDelete, onBack }: Props): JSX.Element {
+  const [confirmId, setConfirmId] = useState<string | null>(null)
   return (
     <div>
       {/* Breadcrumb */}
@@ -100,25 +123,35 @@ export function ReleaseDetail({ release, loading, onUpload, onDelete, onBack }: 
                 </div>
 
                 <div className="flex items-center gap-xs flex-shrink-0">
-                  <button
-                    onClick={() => window.open(asset.downloadUrl)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-xs font-sans text-body-sm font-[480] text-ink hover:opacity-60 px-sm py-xxs"
-                  >
-                    <Download size={13} strokeWidth={2} />
-                    Download
-                  </button>
-                  <button
-                    onClick={() => onDelete(release, asset.id)}
-                    disabled={loading}
-                    className={cn(
-                      'opacity-0 group-hover:opacity-100 transition-opacity',
-                      'w-8 h-8 flex items-center justify-center rounded-full',
-                      'hover:bg-block-coral/40 text-ink disabled:opacity-30'
-                    )}
-                    title="Delete asset"
-                  >
-                    <X size={14} strokeWidth={2} />
-                  </button>
+                  {confirmId === asset.id ? (
+                    <DeleteConfirm
+                      asset={asset}
+                      onConfirm={() => { setConfirmId(null); onDelete(release, asset.id) }}
+                      onCancel={() => setConfirmId(null)}
+                    />
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => window.open(asset.downloadUrl)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-xs font-sans text-body-sm font-[480] text-ink hover:opacity-60 px-sm py-xxs"
+                      >
+                        <Download size={13} strokeWidth={2} />
+                        Download
+                      </button>
+                      <button
+                        onClick={() => setConfirmId(asset.id)}
+                        disabled={loading}
+                        className={cn(
+                          'opacity-0 group-hover:opacity-100 transition-opacity',
+                          'w-8 h-8 flex items-center justify-center rounded-full',
+                          'hover:bg-block-coral/40 text-ink disabled:opacity-30'
+                        )}
+                        title="Delete asset"
+                      >
+                        <Trash2 size={14} strokeWidth={1.5} />
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
