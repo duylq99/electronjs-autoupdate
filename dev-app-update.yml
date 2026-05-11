@@ -3,7 +3,7 @@
 
 # GitHub (default):
 provider: github
-owner: GITHUB_USERNAME_PLACEHOLDER
+owner: duylq99
 repo: electronjs-autoupdate
 
 # GitLab (uncomment và điền project ID):
