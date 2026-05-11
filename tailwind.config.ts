@@ -44,7 +44,7 @@ export default {
         section: '96px'
       },
       fontFamily: {
-        sans: ['JetBrains Mono', 'JetBrains Mono Fallback', 'SF Mono', 'Menlo', 'monospace'],
+        sans: ['Google Sans', 'DM Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'JetBrains Mono Fallback', 'SF Mono', 'Menlo', 'monospace']
       },
       fontSize: {
