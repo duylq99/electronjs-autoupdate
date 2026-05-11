@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(writing-plans)",
+      "Bash(npm --version)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(pkill -f \"electron-vite dev\")",
+      "Bash(pkill -f \"electron\")",
+      "Bash(pkill -f electron)",
+      "Bash(echo \"Dev server starting in background, PID: $!\")",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('git'\\)\\).join\\(', '\\)\\)\")",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('gitlab'\\)\\).join\\(', '\\)\\)\")",
+      "Bash(node *)",
+      "Bash(DEBUG=electron-builder electron-builder --win)",
+      "Bash(npx electron-builder *)"
+    ]
+  }
+}

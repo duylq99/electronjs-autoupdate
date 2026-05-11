@@ -1,0 +1,12 @@
+# Dùng để test auto-update trong dev mode (app.isPackaged = false).
+# Đổi provider thành 'generic' + url nếu test với GitLab.
+
+# GitHub (default):
+provider: github
+owner: GITHUB_USERNAME_PLACEHOLDER
+repo: electronjs-autoupdate
+
+# GitLab (uncomment và điền project ID):
+# provider: generic
+# url: https://gitlab.com/api/v4/projects/YOUR_PROJECT_ID/packages/generic/electron-releases/latest
+# updaterCacheDirName: electronjs-autoupdate-updater

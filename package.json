@@ -1,0 +1,46 @@
+{
+  "name": "electronjs-autoupdate",
+  "version": "1.0.0",
+  "description": "Electron auto-update demo with React + shadcn/ui",
+  "main": "out/main/index.js",
+  "author": "duyle7581@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "dist": "npm run build && electron-builder",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:gitlab:win": "npm run build && electron-builder --win && node scripts/publish-gitlab.mjs",
+    "dist:gitlab:mac": "npm run build && electron-builder --mac && node scripts/publish-gitlab.mjs",
+    "dist:gitlab:linux": "npm run build && electron-builder --linux && node scripts/publish-gitlab.mjs"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "electron-updater": "^6.3.4",
+    "lucide-react": "^1.14.0",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0",
+    "postcss": "^8.5.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11"
+  }
+}
