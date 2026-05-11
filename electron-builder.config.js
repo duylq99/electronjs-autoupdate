@@ -65,7 +65,7 @@ module.exports = {
       }
     : {
         provider: 'github',
-        owner: process.env.GH_OWNER || 'duylq1',
+        owner: process.env.GH_OWNER || 'duylq99',
         repo: 'electronjs-autoupdate',
         releaseType: 'release'
       }
