@@ -44,7 +44,7 @@ export default {
         section: '96px'
       },
       fontFamily: {
-        sans: ['Inter', 'Inter Fallback', 'SF Pro Display', 'system-ui', 'helvetica', 'sans-serif'],
+        sans: ['JetBrains Mono', 'JetBrains Mono Fallback', 'SF Mono', 'Menlo', 'monospace'],
         mono: ['JetBrains Mono', 'JetBrains Mono Fallback', 'SF Mono', 'Menlo', 'monospace']
       },
       fontSize: {

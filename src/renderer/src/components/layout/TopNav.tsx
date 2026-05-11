@@ -12,11 +12,16 @@ interface TopNavProps {
 export function TopNav({ activeView, onNavigate }: TopNavProps): JSX.Element {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [version, setVersion] = useState('')
 
   useEffect(() => {
     const onScroll = (): void => setScrolled(window.scrollY > 8)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    window.electronAPI?.getAppVersion().then(setVersion)
   }, [])
 
   return (
@@ -34,6 +39,11 @@ export function TopNav({ activeView, onNavigate }: TopNavProps): JSX.Element {
         >
           <LayoutGrid size={20} strokeWidth={1.5} className="text-ink" />
           <span className="font-sans font-[540] text-body text-ink tracking-tight">AutoUpdate Demo</span>
+          {version && (
+            <span className="font-mono text-caption font-[400] text-ink opacity-40 border border-hairline rounded-sm px-xxs py-[2px]">
+              v{version}
+            </span>
+          )}
         </button>
 
         {/* Desktop nav */}

@@ -52,7 +52,7 @@
   }
 
   body {
-    font-family: 'Inter', 'SF Pro Display', system-ui, helvetica, sans-serif;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
     background-color: var(--color-canvas);
     color: var(--color-ink);
     overflow-x: hidden;
